@@ -91,7 +91,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         initNavigation();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Slide slideTransition = new Slide();
-            slideTransition.setSlideEdge(Gravity.LEFT);
+            slideTransition.setSlideEdge(Gravity.START);
             slideTransition.setDuration(getResources().getInteger(R.integer.anim_duration_long));
             getWindow().setReenterTransition(slideTransition);
             getWindow().setExitTransition(slideTransition);
@@ -192,16 +192,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        /*if (id == R.id.action_settings) {
-            return true;
-        }*/
-
         return super.onOptionsItemSelected(item);
     }
 

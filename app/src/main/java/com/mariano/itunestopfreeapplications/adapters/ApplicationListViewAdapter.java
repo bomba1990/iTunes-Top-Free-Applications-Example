@@ -12,7 +12,7 @@ import com.mariano.itunestopfreeapplications.models.Application;
 import io.realm.OrderedRealmCollection;
 import io.realm.RealmBaseAdapter;
 
-/**
+/** TODO: no necesario, eliminar
  * Created by mariano on 11/01/17.
  */
 

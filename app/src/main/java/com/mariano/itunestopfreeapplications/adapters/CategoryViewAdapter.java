@@ -12,7 +12,7 @@ import com.mariano.itunestopfreeapplications.models.Category;
 import io.realm.OrderedRealmCollection;
 import io.realm.RealmRecyclerViewAdapter;
 
-/**
+/** TODO: no necesario, eliminar
  * Created by mariano on 10/01/17.
  */
 

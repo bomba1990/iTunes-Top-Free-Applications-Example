@@ -12,9 +12,8 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
-        <activity android:name=".activities.SplashActivity">
-
-        </activity>
+        <!-- TODO: No necesaria, eliminar
+        <activity android:name=".activities.SplashActivity"/>-->
         <activity android:name=".activities.MainActivity"
             android:theme="@style/AppThemeSplash"
             android:label="@string/app_name"  >
@@ -23,6 +22,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <!-- TODO: No necesaria, eliminar
         <activity
             android:name=".activities.AplicacionesActivity"
             android:parentActivityName=".activities.MainActivity">
@@ -30,7 +30,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.mariano.itunestopfreeapplications.activities.MainActivity" />
 
-        </activity>
+        </activity>-->
         <activity
             android:name=".activities.DetalleActivity"
             android:label="@string/title_activity_detalle"

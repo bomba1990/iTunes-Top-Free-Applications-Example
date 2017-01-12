@@ -58,12 +58,6 @@ public class AplicacionesViewAdapter extends RealmRecyclerViewAdapter<Applicatio
             if(clickListener != null)
             clickListener.onItemClick(getAdapterPosition(),view);
         }
-
-//        @Override
-//        public boolean onLongClick(View v) {
-//            activity.deleteItem(data);
-//            return true;
-//        }
     }
     public void setOnItemClickListener(ClickListener clickListener) {
         this.clickListener = clickListener;
