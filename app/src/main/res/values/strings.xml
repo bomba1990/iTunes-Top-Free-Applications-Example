@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">iTunes Top Free Applications</string>
+    <string name="points">...</string>
+    <string name="title_activity_detalle">Detalle</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="inicio">Inicio</string>
+    <string name="search_title">Buscar</string>
+    <string name="ver">Ver</string>
+    <string name="retry">Reintentar</string>
+    <string name="failed_connection">Fallo la conexión</string>
+</resources>
