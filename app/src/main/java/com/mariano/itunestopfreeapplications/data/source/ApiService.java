@@ -1,4 +1,4 @@
-package com.mariano.itunestopfreeapplications.api;
+package com.mariano.itunestopfreeapplications.data.source;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;

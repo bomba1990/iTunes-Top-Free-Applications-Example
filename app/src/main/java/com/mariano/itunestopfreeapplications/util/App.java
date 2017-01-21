@@ -1,4 +1,4 @@
-package com.mariano.itunestopfreeapplications;
+package com.mariano.itunestopfreeapplications.util;
 
 import android.app.Application;
 

@@ -1,4 +1,4 @@
-package com.mariano.itunestopfreeapplications.activities;
+package com.mariano.itunestopfreeapplications.apps;
 
 import android.app.ActivityOptions;
 import android.content.Intent;
@@ -25,11 +25,11 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.mariano.itunestopfreeapplications.R;
-import com.mariano.itunestopfreeapplications.adapters.AplicacionesViewAdapter;
-import com.mariano.itunestopfreeapplications.background.LoadDataService;
-import com.mariano.itunestopfreeapplications.models.Application;
-import com.mariano.itunestopfreeapplications.models.Category;
-import com.mariano.itunestopfreeapplications.models.events.onFailEvent;
+import com.mariano.itunestopfreeapplications.appdetail.DetalleActivity;
+import com.mariano.itunestopfreeapplications.data.source.LoadDataService;
+import com.mariano.itunestopfreeapplications.data.Application;
+import com.mariano.itunestopfreeapplications.data.Category;
+import com.mariano.itunestopfreeapplications.data.events.onFailEvent;
 import com.mariano.itunestopfreeapplications.util.ui.DividerItemDecoration;
 
 import org.greenrobot.eventbus.EventBus;
@@ -40,12 +40,12 @@ import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, AplicacionesViewAdapter.ClickListener {
+public class AppsActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, AppsViewAdapter.ClickListener {
 
     private Toolbar mToolbar;
     private RecyclerView recyclerView;
     private Realm realm;
-    private AplicacionesViewAdapter adapter;
+    private AppsViewAdapter adapter;
 
     private RealmResults<Category> mCategorys;
     private RealmResults<Application> mApps;
@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         else
             recyclerView.setLayoutManager(new GridLayoutManager(this,3));
 
-        adapter = new AplicacionesViewAdapter(this, mApps);
+        adapter = new AppsViewAdapter(this, mApps);
         recyclerView.setAdapter(adapter);
         recyclerView.setHasFixedSize(true);
         recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST));
@@ -140,7 +140,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Snackbar.make(mContainer,R.string.failed_connection,Snackbar.LENGTH_INDEFINITE).setAction(R.string.retry, new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent mServiceIntent = new Intent(MainActivity.this, LoadDataService.class);
+                Intent mServiceIntent = new Intent(AppsActivity.this, LoadDataService.class);
                 startService(mServiceIntent);
 
             }

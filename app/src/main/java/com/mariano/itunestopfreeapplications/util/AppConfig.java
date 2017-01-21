@@ -1,4 +1,4 @@
-package com.mariano.itunestopfreeapplications;
+package com.mariano.itunestopfreeapplications.util;
 
 /**
  * Created by mariano on 1/6/17.

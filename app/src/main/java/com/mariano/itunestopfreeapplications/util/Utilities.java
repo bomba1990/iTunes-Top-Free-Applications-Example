@@ -1,7 +1,6 @@
 package com.mariano.itunestopfreeapplications.util;
 
-import com.mariano.itunestopfreeapplications.AppConfig;
-import com.mariano.itunestopfreeapplications.api.ApiService;
+import com.mariano.itunestopfreeapplications.data.source.ApiService;
 
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;

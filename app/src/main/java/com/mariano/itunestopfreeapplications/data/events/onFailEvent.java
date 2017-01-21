@@ -1,4 +1,4 @@
-package com.mariano.itunestopfreeapplications.models.events;
+package com.mariano.itunestopfreeapplications.data.events;
 
 /**
  * Created by mariano on 11/01/17.

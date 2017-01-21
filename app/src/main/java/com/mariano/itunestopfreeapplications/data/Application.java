@@ -1,4 +1,4 @@
-package com.mariano.itunestopfreeapplications.models;
+package com.mariano.itunestopfreeapplications.data;
 
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;

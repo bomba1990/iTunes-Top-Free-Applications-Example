@@ -1,14 +1,13 @@
-package com.mariano.itunestopfreeapplications.background;
+package com.mariano.itunestopfreeapplications.data.source;
 
 import android.app.IntentService;
 import android.content.Intent;
 import android.util.Log;
 
-import com.mariano.itunestopfreeapplications.AppConfig;
-import com.mariano.itunestopfreeapplications.api.ApiService;
-import com.mariano.itunestopfreeapplications.models.Application;
-import com.mariano.itunestopfreeapplications.models.Category;
-import com.mariano.itunestopfreeapplications.models.events.onFailEvent;
+import com.mariano.itunestopfreeapplications.util.AppConfig;
+import com.mariano.itunestopfreeapplications.data.Application;
+import com.mariano.itunestopfreeapplications.data.Category;
+import com.mariano.itunestopfreeapplications.data.events.onFailEvent;
 import com.mariano.itunestopfreeapplications.util.Utilities;
 
 import org.greenrobot.eventbus.EventBus;

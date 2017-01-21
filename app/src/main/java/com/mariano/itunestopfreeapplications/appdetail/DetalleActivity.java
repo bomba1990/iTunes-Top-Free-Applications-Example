@@ -1,4 +1,4 @@
-package com.mariano.itunestopfreeapplications.activities;
+package com.mariano.itunestopfreeapplications.appdetail;
 
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -18,7 +18,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.mariano.itunestopfreeapplications.R;
-import com.mariano.itunestopfreeapplications.models.Application;
+import com.mariano.itunestopfreeapplications.data.Application;
 
 import io.realm.Realm;
 

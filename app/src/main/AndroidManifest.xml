@@ -6,15 +6,13 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
-        android:name=".App"
+        android:name=".util.App"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
-        <!-- TODO: No necesaria, eliminar
-        <activity android:name=".activities.SplashActivity"/>-->
-        <activity android:name=".activities.MainActivity"
+        <activity android:name=".apps.AppsActivity"
             android:theme="@style/AppThemeSplash"
             android:label="@string/app_name"  >
             <intent-filter>
@@ -22,25 +20,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <!-- TODO: No necesaria, eliminar
         <activity
-            android:name=".activities.AplicacionesActivity"
-            android:parentActivityName=".activities.MainActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.mariano.itunestopfreeapplications.activities.MainActivity" />
-
-        </activity>-->
-        <activity
-            android:name=".activities.DetalleActivity"
+            android:name=".appdetail.DetalleActivity"
             android:label="@string/title_activity_detalle"
-            android:parentActivityName=".activities.MainActivity">
+            android:parentActivityName=".apps.AppsActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.mariano.itunestopfreeapplications.activities.MainActivity" />
+                android:value="com.mariano.itunestopfreeapplications.apps.AppsActivity" />
         </activity>
         <service
-            android:name=".background.LoadDataService"
+            android:name=".data.source.LoadDataService"
             android:exported="false"/>
     </application>
 
