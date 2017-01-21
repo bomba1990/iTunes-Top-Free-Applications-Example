@@ -1,6 +1,9 @@
 package com.mariano.itunestopfreeapplications.apps;
 
 
+import android.app.ActivityOptions;
+import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -13,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.mariano.itunestopfreeapplications.R;
+import com.mariano.itunestopfreeapplications.appdetail.DetalleActivity;
 import com.mariano.itunestopfreeapplications.data.Application;
 import com.mariano.itunestopfreeapplications.data.events.onFailEvent;
 import com.mariano.itunestopfreeapplications.util.ui.DividerItemDecoration;
@@ -20,7 +24,7 @@ import com.mariano.itunestopfreeapplications.util.ui.DividerItemDecoration;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
-import io.realm.Realm;
+import io.realm.RealmResults;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -29,8 +33,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 
 public class AppsFragment extends Fragment implements AppsViewAdapter.ClickListener, AppsContract.View {
-    private RecyclerView recyclerView;
-    private Realm realm;
 
     private AppsViewAdapter adapter;
     private View mContainer;
@@ -44,8 +46,6 @@ public class AppsFragment extends Fragment implements AppsViewAdapter.ClickListe
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        realm = Realm.getDefaultInstance();
-
         adapter = new AppsViewAdapter(getContext(), null);
 
         adapter.setOnItemClickListener(this);
@@ -56,7 +56,7 @@ public class AppsFragment extends Fragment implements AppsViewAdapter.ClickListe
                              Bundle savedInstanceState) {
         mContainer = inflater.inflate(R.layout.fragment_apps, container, false);
 
-        recyclerView = (RecyclerView) mContainer.findViewById(R.id.list);
+        RecyclerView recyclerView = (RecyclerView) mContainer.findViewById(R.id.list);
 
         boolean isPhone = getResources().getBoolean(R.bool.is_phone);
         if(isPhone)
@@ -81,6 +81,24 @@ public class AppsFragment extends Fragment implements AppsViewAdapter.ClickListe
     }
 
     @Override
+    public void showAppDetailView(@NonNull long id) {
+        Intent intent = new Intent(getContext(), DetalleActivity.class);
+        intent.putExtra(DetalleActivity.ARG_APP_ID,id);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            startActivity(intent,
+                    ActivityOptions.makeSceneTransitionAnimation(getActivity()).toBundle());
+        }else{
+            startActivity(intent);
+        }
+    }
+
+    @Override
+    public void showApps(RealmResults<Application> apps) {
+        adapter.updateData(apps);
+    }
+
+    @Override
     public void onStart() {
         super.onStart();
         EventBus.getDefault().register(this);
@@ -102,10 +120,6 @@ public class AppsFragment extends Fragment implements AppsViewAdapter.ClickListe
 
             }
         }).show();*/
-    }
-    @Override
-    public void onItemClick(int position, View v) {
-
     }
 
     @Override

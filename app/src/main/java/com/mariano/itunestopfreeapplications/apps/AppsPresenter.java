@@ -1,12 +1,9 @@
 package com.mariano.itunestopfreeapplications.apps;
 
-import android.app.ActivityOptions;
-import android.content.Intent;
-import android.os.Build;
 import android.support.annotation.NonNull;
 import android.view.View;
 
-import com.mariano.itunestopfreeapplications.appdetail.DetalleActivity;
+import com.mariano.itunestopfreeapplications.data.Application;
 import com.mariano.itunestopfreeapplications.data.source.RealmService;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -22,6 +19,7 @@ public class AppsPresenter implements AppsContract.Presenter {
 //TODO:    private TasksFilterType mCurrentFiltering = TasksFilterType.ALL_TASKS;
 
     private boolean mFirstLoad = true;
+    private AppsViewAdapter mAdapter;
 
     public AppsPresenter(@NonNull RealmService realmService, @NonNull AppsContract.View tasksView) {
         mRealmService = checkNotNull(realmService, "realmService cannot be null");
@@ -32,7 +30,7 @@ public class AppsPresenter implements AppsContract.Presenter {
 
     @Override
     public void start() {
-
+        mTasksView.showApps(mRealmService.getAllApps());
     }
 
     @Override
@@ -41,15 +39,7 @@ public class AppsPresenter implements AppsContract.Presenter {
     }
 
     @Override
-    public void onItemClick(int position, View v) {
-        Intent intent = new Intent(getContext(), DetalleActivity.class);
-        intent.putExtra(DetalleActivity.ARG_APP_ID,adapter.getItem(position).getId());
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            startActivity(intent,
-                    ActivityOptions.makeSceneTransitionAnimation(getActivity()).toBundle());
-        }else{
-            startActivity(intent);
-        }
+    public void onItemClick(Application obj, View v) {
+        mTasksView.showAppDetailView(obj.getId());
     }
 }
