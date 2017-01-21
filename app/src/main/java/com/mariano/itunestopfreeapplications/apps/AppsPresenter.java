@@ -4,7 +4,11 @@ import android.support.annotation.NonNull;
 import android.view.View;
 
 import com.mariano.itunestopfreeapplications.data.Application;
+import com.mariano.itunestopfreeapplications.data.events.onFailEvent;
 import com.mariano.itunestopfreeapplications.data.source.RealmService;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -31,6 +35,20 @@ public class AppsPresenter implements AppsContract.Presenter {
     @Override
     public void start() {
         mTasksView.showApps(mRealmService.getAllApps());
+    }
+    @Override
+    public void onStart() {
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Subscribe
+    public void onEvent(onFailEvent event){
+        mTasksView.onErrorService();
     }
 
     @Override

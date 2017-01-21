@@ -7,6 +7,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -18,11 +19,8 @@ import android.view.ViewGroup;
 import com.mariano.itunestopfreeapplications.R;
 import com.mariano.itunestopfreeapplications.appdetail.DetalleActivity;
 import com.mariano.itunestopfreeapplications.data.Application;
-import com.mariano.itunestopfreeapplications.data.events.onFailEvent;
+import com.mariano.itunestopfreeapplications.data.source.LoadDataService;
 import com.mariano.itunestopfreeapplications.util.ui.DividerItemDecoration;
-
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
 
 import io.realm.RealmResults;
 
@@ -99,27 +97,15 @@ public class AppsFragment extends Fragment implements AppsViewAdapter.ClickListe
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        EventBus.getDefault().register(this);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        EventBus.getDefault().unregister(this);
-    }
-
-    @Subscribe
-    public void onEvent(onFailEvent event){
-        /*Snackbar.make(mContainer,R.string.failed_connection,Snackbar.LENGTH_INDEFINITE).setAction(R.string.retry, new View.OnClickListener() {
+    public void onErrorService() {
+        Snackbar.make(mContainer,R.string.failed_connection,Snackbar.LENGTH_INDEFINITE).setAction(R.string.retry, new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent mServiceIntent = new Intent(AppsActivity.this, LoadDataService.class);
-                startService(mServiceIntent);
+                Intent mServiceIntent = new Intent(getActivity(), LoadDataService.class);
+                getActivity().startService(mServiceIntent);
 
             }
-        }).show();*/
+        }).show();
     }
 
     @Override

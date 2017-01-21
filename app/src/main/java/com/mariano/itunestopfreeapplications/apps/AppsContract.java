@@ -17,6 +17,7 @@ public interface AppsContract {
         void setPresenter(@NonNull AppsContract.Presenter presenter);
         void showAppDetailView(@NonNull final long id);
         void showApps(RealmResults<Application> apps);
+        void onErrorService();
     }
     interface Presenter extends BasePresenter {
         void onItemClick(Application obj, android.view.View v);

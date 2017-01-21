@@ -1,5 +1,6 @@
 package com.mariano.itunestopfreeapplications.apps;
 
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -14,6 +15,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.mariano.itunestopfreeapplications.R;
+import com.mariano.itunestopfreeapplications.data.source.LoadDataService;
 import com.mariano.itunestopfreeapplications.data.source.RealmService;
 import com.mariano.itunestopfreeapplications.util.ActivityUtils;
 import com.mariano.itunestopfreeapplications.util.ui.BaseActivity;
@@ -37,6 +39,9 @@ public class AppsActivity extends BaseActivity implements NavigationView.OnNavig
         setSupportActionBar(mToolbar);
 
         getWindow().setBackgroundDrawableResource(R.color.blanco);
+
+        Intent mServiceIntent = new Intent(this, LoadDataService.class);
+        startService(mServiceIntent);
 
 
         AppsFragment appsFragment =
@@ -94,6 +99,18 @@ public class AppsActivity extends BaseActivity implements NavigationView.OnNavig
                 }
             }
         });*/
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mAppsPresenter.onStart();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        mAppsPresenter.onStop();
     }
 
     @Override
