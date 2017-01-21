@@ -19,5 +19,6 @@ package com.mariano.itunestopfreeapplications;
 public interface BasePresenter {
 
     void start();
+    void closeRealm();
 
 }

@@ -1,55 +1,32 @@
 package com.mariano.itunestopfreeapplications.apps;
 
-import android.app.ActivityOptions;
-import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.transition.Slide;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
 import com.mariano.itunestopfreeapplications.R;
-import com.mariano.itunestopfreeapplications.appdetail.DetalleActivity;
-import com.mariano.itunestopfreeapplications.data.source.LoadDataService;
-import com.mariano.itunestopfreeapplications.data.Application;
-import com.mariano.itunestopfreeapplications.data.Category;
-import com.mariano.itunestopfreeapplications.data.events.onFailEvent;
-import com.mariano.itunestopfreeapplications.util.ui.DividerItemDecoration;
+import com.mariano.itunestopfreeapplications.data.source.RealmService;
+import com.mariano.itunestopfreeapplications.util.ActivityUtils;
+import com.mariano.itunestopfreeapplications.util.ui.BaseActivity;
 
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-
-import io.realm.Case;
 import io.realm.Realm;
-import io.realm.RealmChangeListener;
-import io.realm.RealmResults;
 
-public class AppsActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, AppsViewAdapter.ClickListener {
+public class AppsActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener {
+    private static final String CURRENT_FILTERING_KEY = "CURRENT_FILTERING_KEY";
 
+    private DrawerLayout mDrawerLayout;
+
+    private AppsPresenter mAppsPresenter;
     private Toolbar mToolbar;
-    private RecyclerView recyclerView;
-    private Realm realm;
-    private AppsViewAdapter adapter;
-
-    private RealmResults<Category> mCategorys;
-    private RealmResults<Application> mApps;
-    private View mContainer;
 
 
     @Override
@@ -62,31 +39,24 @@ public class AppsActivity extends AppCompatActivity implements NavigationView.On
         getWindow().setBackgroundDrawableResource(R.color.blanco);
 
 
-        mContainer = findViewById(R.id.container);
+        AppsFragment appsFragment =
+                (AppsFragment) getSupportFragmentManager().findFragmentById(R.id.contentFrame);
+        if (appsFragment == null) {
+            // Create the fragment
+            appsFragment = AppsFragment.newInstance();
+            ActivityUtils.addFragmentToActivity(
+                    getSupportFragmentManager(), appsFragment, R.id.contentFrame);
+        }
 
-        realm = Realm.getDefaultInstance();
+        // Create the presenter
+        mAppsPresenter = new AppsPresenter(new RealmService(Realm.getDefaultInstance()), appsFragment);
 
-        boolean isPhone = getResources().getBoolean(R.bool.is_phone);
-        if(isPhone)
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        else
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-
-
-        mCategorys = realm.where(Category.class).findAll();
-        mApps = realm.where(Application.class).findAll();
-
-        recyclerView = (RecyclerView) findViewById(R.id.list);
-        if(isPhone)
-            recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        else
-            recyclerView.setLayoutManager(new GridLayoutManager(this,3));
-
-        adapter = new AppsViewAdapter(this, mApps);
-        recyclerView.setAdapter(adapter);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST));
-        adapter.setOnItemClickListener(this);
+        //TODO: Load previously saved state, if available.
+        /*if (savedInstanceState != null) {
+            AppsFilterType currentFiltering =
+                    (AppsFilterType) savedInstanceState.getSerializable(CURRENT_FILTERING_KEY);
+            mAppsPresenter.setFiltering(currentFiltering);
+        }*/
 
         initNavigation();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -98,17 +68,7 @@ public class AppsActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        EventBus.getDefault().register(this);
-    }
 
-    @Override
-    public void onStop() {
-        super.onStop();
-        EventBus.getDefault().unregister(this);
-    }
 
     private void initNavigation() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -122,7 +82,7 @@ public class AppsActivity extends AppCompatActivity implements NavigationView.On
 
         final Menu menu = navigationView.getMenu();
 
-        for(Category cat : mCategorys) {
+        /*for(Category cat : mCategorys) {
             menu.add(R.id.nav_inicio, (int)cat.getId(), 0, cat.getLabel());
         }
         mCategorys.addChangeListener(new RealmChangeListener<RealmResults<Category>>() {
@@ -133,24 +93,14 @@ public class AppsActivity extends AppCompatActivity implements NavigationView.On
                         menu.add(R.id.nav_inicio, (int)cat.getId(), 0, cat.getLabel());
                 }
             }
-        });
+        });*/
     }
-    @Subscribe
-    public void onEvent(onFailEvent event){
-        Snackbar.make(mContainer,R.string.failed_connection,Snackbar.LENGTH_INDEFINITE).setAction(R.string.retry, new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent mServiceIntent = new Intent(AppsActivity.this, LoadDataService.class);
-                startService(mServiceIntent);
 
-            }
-        }).show();
-    }
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        realm.close();
+    protected void closeRealm() {
+        mAppsPresenter.closeRealm();
     }
+
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -161,7 +111,7 @@ public class AppsActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-    @Override
+    /*@Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         MenuItem menuF = menu.findItem(R.id.action_search);
         SearchView searchView = (SearchView) MenuItemCompat.getActionView(menuF);
@@ -182,7 +132,7 @@ public class AppsActivity extends AppCompatActivity implements NavigationView.On
             }
         });
         return true;
-    }
+    }*/
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -195,8 +145,13 @@ public class AppsActivity extends AppCompatActivity implements NavigationView.On
         return super.onOptionsItemSelected(item);
     }
 
-
     @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        return false;
+    }
+
+
+    /*@Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
 
@@ -215,18 +170,7 @@ public class AppsActivity extends AppCompatActivity implements NavigationView.On
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
-    }
+    }*/
 
-    @Override
-    public void onItemClick(int position, View v) {
-        Intent intent = new Intent(getApplicationContext(), DetalleActivity.class);
-        intent.putExtra(DetalleActivity.ARG_APP_ID,adapter.getItem(position).getId());
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            startActivity(intent,
-                    ActivityOptions.makeSceneTransitionAnimation(this).toBundle());
-        }else{
-            startActivity(intent);
-        }
-    }
 }

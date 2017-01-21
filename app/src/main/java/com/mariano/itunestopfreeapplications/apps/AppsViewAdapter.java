@@ -56,7 +56,7 @@ public class AppsViewAdapter extends RealmRecyclerViewAdapter<Application, AppsV
         @Override
         public void onClick(View view) {
             if(clickListener != null)
-            clickListener.onItemClick(getAdapterPosition(),view);
+            clickListener.onItemClick(getItem(getAdapterPosition()),view);
         }
     }
     public void setOnItemClickListener(ClickListener clickListener) {
@@ -64,6 +64,6 @@ public class AppsViewAdapter extends RealmRecyclerViewAdapter<Application, AppsV
     }
 
     public interface ClickListener {
-        void onItemClick(int position, View v);
+        void onItemClick(Application obj, View v);
     }
 }

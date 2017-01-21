@@ -31,5 +31,6 @@ ext {
 
     // App dependencies
     supportLibraryVersion = '25.1.0'
+    guavaVersion = '21.0'
 
 }
