@@ -1,7 +1,9 @@
 package com.mariano.itunestopfreeapplications.data.source;
 
 import com.mariano.itunestopfreeapplications.data.Application;
+import com.mariano.itunestopfreeapplications.data.Category;
 
+import io.realm.Case;
 import io.realm.Realm;
 import io.realm.RealmResults;
 
@@ -23,6 +25,13 @@ public class RealmService {
 
     public Application getApplication(final int id) {
         return mRealm.where(Application.class).equalTo("id", id).findFirst();
+    }
+    public Category getCategory(final int id) {
+        return mRealm.where(Category.class).equalTo("id", id).findFirst();
+    }
+
+    public RealmResults<Application> getAllApps(String query) {
+        return mRealm.where(Application.class).contains("title",query, Case.INSENSITIVE).findAll();
     }
 
     /*public void addBookAsync(final String title, final String author, final String isbn, final String publisher,

@@ -6,8 +6,10 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.transition.Slide;
 import android.view.Gravity;
@@ -15,12 +17,15 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.mariano.itunestopfreeapplications.R;
+import com.mariano.itunestopfreeapplications.data.Category;
 import com.mariano.itunestopfreeapplications.data.source.LoadDataService;
 import com.mariano.itunestopfreeapplications.data.source.RealmService;
 import com.mariano.itunestopfreeapplications.util.ActivityUtils;
 import com.mariano.itunestopfreeapplications.util.ui.BaseActivity;
 
 import io.realm.Realm;
+import io.realm.RealmChangeListener;
+import io.realm.RealmResults;
 
 public class AppsActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener {
     private static final String CURRENT_FILTERING_KEY = "CURRENT_FILTERING_KEY";
@@ -29,6 +34,7 @@ public class AppsActivity extends BaseActivity implements NavigationView.OnNavig
 
     private AppsPresenter mAppsPresenter;
     private Toolbar mToolbar;
+    private Realm realm;
 
 
     @Override
@@ -43,6 +49,8 @@ public class AppsActivity extends BaseActivity implements NavigationView.OnNavig
         Intent mServiceIntent = new Intent(this, LoadDataService.class);
         startService(mServiceIntent);
 
+        realm = Realm.getDefaultInstance();
+
 
         AppsFragment appsFragment =
                 (AppsFragment) getSupportFragmentManager().findFragmentById(R.id.contentFrame);
@@ -54,14 +62,13 @@ public class AppsActivity extends BaseActivity implements NavigationView.OnNavig
         }
 
         // Create the presenter
-        mAppsPresenter = new AppsPresenter(new RealmService(Realm.getDefaultInstance()), appsFragment);
+        mAppsPresenter = new AppsPresenter(new RealmService(realm), appsFragment);
 
         //TODO: Load previously saved state, if available.
-        /*if (savedInstanceState != null) {
-            AppsFilterType currentFiltering =
-                    (AppsFilterType) savedInstanceState.getSerializable(CURRENT_FILTERING_KEY);
+        if (savedInstanceState != null) {
+            int currentFiltering = savedInstanceState.getInt(CURRENT_FILTERING_KEY,0);
             mAppsPresenter.setFiltering(currentFiltering);
-        }*/
+        }
 
         initNavigation();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -72,7 +79,11 @@ public class AppsActivity extends BaseActivity implements NavigationView.OnNavig
             getWindow().setExitTransition(slideTransition);
         }
     }
-
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putInt(CURRENT_FILTERING_KEY, mAppsPresenter.getFiltering());
+        super.onSaveInstanceState(outState);
+    }
 
 
     private void initNavigation() {
@@ -86,11 +97,11 @@ public class AppsActivity extends BaseActivity implements NavigationView.OnNavig
         navigationView.setNavigationItemSelectedListener(this);
 
         final Menu menu = navigationView.getMenu();
-
-        /*for(Category cat : mCategorys) {
+        RealmResults<Category> categories = realm.where(Category.class).findAll();
+        for(Category cat : categories) {
             menu.add(R.id.nav_inicio, (int)cat.getId(), 0, cat.getLabel());
         }
-        mCategorys.addChangeListener(new RealmChangeListener<RealmResults<Category>>() {
+        categories.addChangeListener(new RealmChangeListener<RealmResults<Category>>() {
             @Override
             public void onChange(RealmResults<Category> element) {
                 for(Category cat : element) {
@@ -98,7 +109,7 @@ public class AppsActivity extends BaseActivity implements NavigationView.OnNavig
                         menu.add(R.id.nav_inicio, (int)cat.getId(), 0, cat.getLabel());
                 }
             }
-        });*/
+        });
     }
 
     @Override
@@ -128,7 +139,7 @@ public class AppsActivity extends BaseActivity implements NavigationView.OnNavig
         }
     }
 
-    /*@Override
+    @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         MenuItem menuF = menu.findItem(R.id.action_search);
         SearchView searchView = (SearchView) MenuItemCompat.getActionView(menuF);
@@ -136,20 +147,19 @@ public class AppsActivity extends BaseActivity implements NavigationView.OnNavig
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                mApps = realm.where(Application.class).contains("title",query, Case.INSENSITIVE).findAll();
-                adapter.updateData(mApps);
+                mAppsPresenter.showApps(query);
+
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String query) {
-                mApps = realm.where(Application.class).contains("title",query,Case.INSENSITIVE).findAll();
-                adapter.updateData(mApps);
+                mAppsPresenter.showApps(query);
                 return false;
             }
         });
         return true;
-    }*/
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -164,30 +174,18 @@ public class AppsActivity extends BaseActivity implements NavigationView.OnNavig
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        return false;
-    }
-
-
-    /*@Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
 
         if (id == R.id.nav_inicio) {
-            getSupportActionBar().setTitle(R.string.app_name);
-            mApps = realm.where(Application.class).findAll();
-            adapter.updateData(mApps);
+            //getSupportActionBar().setTitle(R.string.app_name);
+            mAppsPresenter.showAllApps();
         }else{
-            Category category = realm.where(Category.class)
-                    .equalTo("id",id)
-                    .findFirst();
-            getSupportActionBar().setTitle(category.getLabel());
-            adapter.updateData(category.entries);
-
+            mAppsPresenter.showApps(id);
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
-    }*/
+    }
 
 
 }

@@ -22,7 +22,7 @@ import com.mariano.itunestopfreeapplications.data.Application;
 import com.mariano.itunestopfreeapplications.data.source.LoadDataService;
 import com.mariano.itunestopfreeapplications.util.ui.DividerItemDecoration;
 
-import io.realm.RealmResults;
+import io.realm.OrderedRealmCollection;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -92,7 +92,7 @@ public class AppsFragment extends Fragment implements AppsViewAdapter.ClickListe
     }
 
     @Override
-    public void showApps(RealmResults<Application> apps) {
+    public void showApps(OrderedRealmCollection<Application> apps) {
         adapter.updateData(apps);
     }
 
