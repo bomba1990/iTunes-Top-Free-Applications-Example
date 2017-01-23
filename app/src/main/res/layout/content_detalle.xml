@@ -8,29 +8,39 @@
     tools:context="com.mariano.itunestopfreeapplications.activities.DetalleActivity"
     tools:showIn="@layout/activity_detalle">
 
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/content_detalle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="vertical"
         android:paddingBottom="@dimen/activity_vertical_margin"
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingTop="@dimen/activity_vertical_margin"
         >
-        <Button
-            android:id="@+id/view"
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/height_detalle"
-            android:layout_alignParentRight="true"
-            android:text="@string/ver" />
-        <ImageView
-            android:layout_alignBottom="@id/view"
-            android:id="@+id/logo"
-            android:layout_width="32dp"
-            android:layout_height="@dimen/height_detalle" />
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/logo"
+                android:layout_width="32dp"
+                android:layout_height="@dimen/height_detalle" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+            <Button
+                android:id="@+id/view"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/height_detalle"
+                android:text="@string/ver" />
+        </LinearLayout>
+
 
         <TextView
-            android:layout_below="@id/logo"
             android:id="@+id/contenido"
             android:textColor="@color/primary_text"
             android:layout_width="match_parent"
@@ -40,11 +50,10 @@
             android:textColor="@color/secondary_text"
             android:textSize="12sp"
             android:gravity="center"
-            android:layout_below="@id/contenido"
             android:id="@+id/copy"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
 
-    </RelativeLayout>
+    </LinearLayout>
 </android.support.v4.widget.NestedScrollView>
